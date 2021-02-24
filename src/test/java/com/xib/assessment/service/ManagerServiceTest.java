@@ -6,13 +6,9 @@ import com.xib.assessment.dto.ManagerDto;
 import com.xib.assessment.model.Manager;
 import com.xib.assessment.model.Team;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -44,11 +40,11 @@ public class ManagerServiceTest {
         managerDtoFuryStub = new ManagerDto.NewManager("Nick","Fury","12345647890123",new Long[]{11L});
     }
 
-//    @Test
+    @Test
     void testAddNewManager(){
         //prepare stubbing
         setupNickFury();
-        when(managerRepository.findByIdNumber(any(String.class))).thenReturn(null);
+        when(managerRepository.findByIdNumber(any(String.class))).thenReturn(Optional.ofNullable(null));
         when(teamRepository.findById(any(Long.class))).thenReturn(Optional.of(teamAvengers));
         when(managerRepository.save(any(Manager.class))).thenReturn(managerFuryStub);
         //run functionality

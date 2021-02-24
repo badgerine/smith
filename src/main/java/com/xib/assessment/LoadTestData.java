@@ -6,10 +6,12 @@ import com.xib.assessment.dao.TeamRepository;
 import com.xib.assessment.model.Agent;
 import com.xib.assessment.model.Manager;
 import com.xib.assessment.model.Team;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.annotation.ApplicationScope;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -17,7 +19,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
+@ApplicationScope
 public class LoadTestData {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoadTestData.class);
     @Autowired
     AgentRepository agentRepository;
     @Autowired
@@ -32,8 +36,9 @@ public class LoadTestData {
         Team team2 = createTeam("DC");
         Manager nickFury = createManager("Nick", "Fury","6611115391083",
                 new HashSet<Team>(Arrays.asList(team1,team2)));
-
-        createAgent("Bruce", "Banner", "1011125190081", team1, nickFury);
+        LOGGER.debug(new StringBuilder("created and persisted manager=").append(nickFury).toString());
+        Agent hulk = createAgent("Bruce", "Banner", "1011125190081", team1, nickFury);
+        LOGGER.debug(new StringBuilder("created and persisted agent=").append(hulk).toString());
         createAgent("Tony", "Stark", "6912115191083", team1, nickFury);
         createAgent("Peter", "Parker", "7801115190084", team1, nickFury);
         createAgent("Bruce", "Wayne", "6511185190085", team2, nickFury);
