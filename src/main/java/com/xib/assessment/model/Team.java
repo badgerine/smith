@@ -1,9 +1,7 @@
 package com.xib.assessment.model;
 
-import com.xib.assessment.error.ManagerCountExceededException;
-import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -20,8 +18,10 @@ public class Team {
     @Column(unique = true)
     @NonNull
     private String name;
+    @JsonIgnore
     @ManyToMany(mappedBy = "managerTeams")
     private Set<Manager> managers;
+    @JsonIgnore
     @OneToMany(mappedBy = "team")
     private Set<Agent> agents;
 

@@ -1,5 +1,6 @@
 package com.xib.assessment.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.lang.NonNull;
@@ -12,11 +13,12 @@ import java.util.Set;
 @SuperBuilder
 @Entity
 public class Manager extends Employee{
+    @JsonIgnore
     @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(name="manager_team", joinColumns = @JoinColumn(name = "manager_id"),
     inverseJoinColumns = @JoinColumn(name="team_id"))
     private Set<Team> managerTeams;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "manager")
     private Set<Agent> agents;
 

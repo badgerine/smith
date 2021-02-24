@@ -32,21 +32,18 @@ public class TeamService {
     @Autowired
     private AgentRepository agentRepository;
 
-    public Team addNewTeam(TeamDto.EmptyTeam teamInfo) {
-        validateNewEntry(teamInfo.getName());
-        Team team = new Team(teamInfo.getName());
-        return teamRepository.save(team);
-    }
-
     public Team addNewTeam(TeamDto.ManagedEmptyTeam teamInfo) {
         validateNewEntry(teamInfo.getName());
-        Optional<Manager> managerWrapper = managerRepository.findById(teamInfo.getManagerId());
-        if(!managerWrapper.isPresent()){
-            throw new ManagerNotFoundException(teamInfo.getManagerId(),
-                    teamInfo.getName(),
-                    "Manager not found whilst adding Team. Transaction aborted.");
+        Manager manager = null;
+        if(teamInfo.getManagerId() != null) {
+            Optional<Manager> managerWrapper = managerRepository.findById(teamInfo.getManagerId());
+            if (!managerWrapper.isPresent()) {
+                throw new ManagerNotFoundException(teamInfo.getManagerId(),
+                        teamInfo.getName(),
+                        "Manager not found whilst adding Team. Transaction aborted.");
+            }
+            manager = managerWrapper.get();
         }
-        Manager manager = managerWrapper.get();
         Team team = new Team(teamInfo.getName(), new HashSet<>(Arrays.asList(manager)));
         return teamRepository.save(team);
     }
@@ -84,7 +81,7 @@ public class TeamService {
         List<Team> teams = teamRepository.findByName(name);
         if(!(validEntry = teams.isEmpty())) {
             AlreadyExistsException e = new AlreadyExistsException();
-            e.setFullName(name);
+            e.setName(name);
             e.setMessage("Team with the same name already exists. Transaction aborted.");
             throw e;
         }

@@ -5,11 +5,10 @@ import com.xib.assessment.model.Agent;
 import com.xib.assessment.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -28,11 +27,11 @@ public class AgentController {
     }
 
     @GetMapping(path = ALL_PATH, params = {"pageNo", "pageSize","sortBy"})
-    public ResponseEntity<List<Agent>> findAgents(
+    public ResponseEntity<List<AgentDto.PaginatedAgent>> findAgents(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(defaultValue = "lastName") String sortBy) {
-        List<Agent> results = agentService.findAgentsPaginated(pageNo,pageSize,sortBy);
+        List<AgentDto.PaginatedAgent> results = agentService.findAgentsPaginated(pageNo,pageSize,sortBy);
         HttpStatus responseStatus = results.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return new ResponseEntity<>(results, responseStatus);
     }
@@ -43,15 +42,10 @@ public class AgentController {
         return new ResponseEntity<>(agent, HttpStatus.OK);
     }
 
-    @PostMapping(AGENT_PATH)
+    @PostMapping(path=AGENT_PATH, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addAgent(@RequestBody AgentDto.NewAgent agentDetails){
-        //#TODO
         Agent agent = agentService.addNewAgent(agentDetails);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path(AGENT_PATH+"/{id}")
-                .buildAndExpand(agent.getId())
-                .toUri();
-        return ResponseEntity.created(location).build();
+        return new ResponseEntity<>(agent, HttpStatus.OK);
     }
 
 }

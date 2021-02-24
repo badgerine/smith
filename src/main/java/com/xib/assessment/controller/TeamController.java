@@ -1,18 +1,17 @@
 package com.xib.assessment.controller;
 
 import com.xib.assessment.dao.TeamRepository;
-import com.xib.assessment.dto.AgentDto;
 import com.xib.assessment.dto.TeamDto;
 import com.xib.assessment.model.Agent;
 import com.xib.assessment.model.Team;
 import com.xib.assessment.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -46,25 +45,16 @@ public class TeamController {
         return new ResponseEntity<>(team, HttpStatus.OK);
     }
 
-    @PostMapping(TEAM_PATH)
-    public ResponseEntity<Object> addTeam(@RequestBody TeamDto.EmptyTeam teamInfo){
-        //#TODO
+    @PostMapping(path=TEAM_PATH, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> addTeam(@Validated @RequestBody TeamDto.ManagedEmptyTeam teamInfo){
         Team team = teamService.addNewTeam(teamInfo);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path(TEAM_PATH+"/{id}")
-                .buildAndExpand(team.getId())
-                .toUri();
-        return ResponseEntity.created(location).build();
+        return new ResponseEntity<>(team, HttpStatus.OK);
     }
 
     @PutMapping(TEAM_PATH+"/{id}/agent")
     public ResponseEntity<Object> assignToTeam(@PathVariable("id") Long id, @RequestParam("agentId") Long agentId){
-        //#TODO
         Agent agent = teamService.assignToTeam(id, agentId);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path(TEAM_PATH+"/{id}")
-                .buildAndExpand(id)
-                .toUri();
-        return ResponseEntity.created(location).build();
+        return new ResponseEntity<>(agent, HttpStatus.OK);
     }
+
 }

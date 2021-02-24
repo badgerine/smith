@@ -28,11 +28,12 @@ public class AgentService {
     @Autowired
     private TeamRepository teamRepository;
 
-    public List<Agent> findAgentsPaginated(int pageNo, int pageSize, String sortBy){
+    public List<AgentDto.PaginatedAgent> findAgentsPaginated(int pageNo, int pageSize, String sortBy){
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).ascending());
-        Page<Agent> pagedResult = agentRepository.findAll(paging)
-                .map(agent -> Agent.builder().id(agent.getId()).firstName(agent.getFirstName())
-                .lastName(agent.getLastName()).build());
+        Page<AgentDto.PaginatedAgent> pagedResult = agentRepository.findAll(paging)
+                .map(agent -> AgentDto.PaginatedAgent.builder().id(agent.getId()).firstName(agent.getFirstName())
+                .lastName(agent.getLastName()).teamId(agent.getTeam().getId()).teamName(agent.getTeam().getName())
+                .managerId(agent.getManager().getId()).managerName(agent.getManager().getFirstName()+" "+agent.getManager().getLastName()).build());
         if(pagedResult.hasContent()){
             return pagedResult.getContent();
         } else {

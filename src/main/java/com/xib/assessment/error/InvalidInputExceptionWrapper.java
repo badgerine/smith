@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor @NoArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class AlreadyExistsException extends RuntimeException{
-    private String idNumber;
-    private String name;
+public class InvalidInputExceptionWrapper {
+    private String invalidInput;
     private String message;
 }

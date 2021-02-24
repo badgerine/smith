@@ -1,5 +1,6 @@
 package com.xib.assessment.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.experimental.Tolerate;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @SuperBuilder
 @Entity
 public final class Agent extends Employee{
-
+    @JsonIgnore
     @NonNull
     @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name="manager_id")
@@ -41,7 +42,7 @@ public final class Agent extends Employee{
         if(this.team != null){
             this.team.removeAgent(this);
         };
-//        newTeam.addAgent(this);
+        newTeam.addAgent(this);
         this.team = newTeam;
         return this.team;
     }
@@ -50,7 +51,7 @@ public final class Agent extends Employee{
         if(newManager.equals(this.manager)){
             return this.manager;
         }
-//        newManager.addAgent(this);
+        newManager.addAgent(this);
         this.manager = newManager;
         return this.manager;
     }
