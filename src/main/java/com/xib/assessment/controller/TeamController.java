@@ -1,8 +1,11 @@
 package com.xib.assessment.controller;
 
 import com.xib.assessment.dao.TeamRepository;
+import com.xib.assessment.dto.AgentDto;
+import com.xib.assessment.dto.TeamDto;
 import com.xib.assessment.model.Agent;
 import com.xib.assessment.model.Team;
+import com.xib.assessment.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,28 +22,34 @@ public class TeamController {
 
     @Autowired
     private TeamRepository teamRepository;
+    @Autowired
+    private TeamService teamService;
 
     @GetMapping(ALL_PATH)
-    public ResponseEntity<Agent> findTeams() {
-        //#TODO
-        return null;
+    public ResponseEntity<List<Team>> findTeams() {
+        List<Team> teams  = teamService.findTeams();
+        HttpStatus status = teams.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+        return new ResponseEntity<>(teams, status);
     }
 
     @GetMapping(ALL_PATH+"/empty")
     public ResponseEntity<List<Team>> findEmptyTeams() {
-        return new ResponseEntity<>(teamRepository.findTeamsByEmptyMembership(), HttpStatus.OK);
+        List<Team> emptyTeams  = teamService.findEmptyTeams();
+        HttpStatus status = emptyTeams.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+        return new ResponseEntity<>(emptyTeams, status);
     }
 
     //could've used StringBuilder but the marginal performance gain is not worth the readability.
     @GetMapping(TEAM_PATH+"/{id}")
-    public ResponseEntity<Agent> findTeam(@PathVariable("id") Long id) {
-        //#TODO
-        return null;
+    public ResponseEntity<Team> findTeam(@PathVariable("id") Long id) {
+        Team team = teamService.findTeam(id);
+        return new ResponseEntity<>(team, HttpStatus.OK);
     }
 
     @PostMapping(TEAM_PATH)
-    public ResponseEntity<Object> addTeam(@RequestBody Team team){
+    public ResponseEntity<Object> addTeam(@RequestBody TeamDto.EmptyTeam teamInfo){
         //#TODO
+        Team team = teamService.addNewTeam(teamInfo);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path(TEAM_PATH+"/{id}")
                 .buildAndExpand(team.getId())
@@ -49,8 +58,9 @@ public class TeamController {
     }
 
     @PutMapping(TEAM_PATH+"/{id}/agent")
-    public ResponseEntity<Object> assignToTeam(@PathVariable("id") Long id, @RequestBody Agent agent){
+    public ResponseEntity<Object> assignToTeam(@PathVariable("id") Long id, @RequestParam("agentId") Long agentId){
         //#TODO
+        Agent agent = teamService.assignToTeam(id, agentId);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path(TEAM_PATH+"/{id}")
                 .buildAndExpand(id)

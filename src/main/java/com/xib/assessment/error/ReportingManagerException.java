@@ -1,11 +1,15 @@
 package com.xib.assessment.error;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import com.xib.assessment.model.Manager;
+import com.xib.assessment.model.Team;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-public class ReportingManagerException extends RuntimeException{
-    private String targetManager;
-    private String agent;
-    private String currentManager;
+@Data
+@AllArgsConstructor
+public class ReportingManagerException extends RuntimeException {
+    private String agentIdNumber;
+    private Manager reportingManager;
+    private Team team;
+    private String message;
 }

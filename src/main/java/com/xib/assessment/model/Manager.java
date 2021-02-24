@@ -1,48 +1,53 @@
 package com.xib.assessment.model;
 
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Getter
-@NoArgsConstructor
 @SuperBuilder
 @Entity
-public class Manager extends Employee {
-    @ManyToMany(cascade = CascadeType.MERGE)
+public class Manager extends Employee{
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(name="manager_team", joinColumns = @JoinColumn(name = "manager_id"),
     inverseJoinColumns = @JoinColumn(name="team_id"))
-    private Set<Team> teams;
+    private Set<Team> managerTeams;
 
     @OneToMany(mappedBy = "manager")
     private Set<Agent> agents;
 
-    public Manager(String firstName, String lastName, String idNumber, Set<Team> teams){
+    public Manager(){
+        super();
+        this.agents = new HashSet<>();
+        this.managerTeams = new HashSet<>();
+    }
+
+    public Manager(String firstName, String lastName, String idNumber, Set<Team> managerTeams){
         super(firstName, lastName, idNumber);
-        teams.stream().map(team -> addTeam(team));
+        this.agents = new HashSet<>();
+        this.managerTeams = new HashSet<>();
+        managerTeams.forEach(team -> this.addTeam(team));
     }
 
     protected Set<Agent> addAgent(Agent agent){
         if(agents.contains(agent)){
             return this.agents;
         }
-//        agent.setManager(this);
         agents.add(agent);
         return agents;
     }
 
-    private Set<Team> addTeam(Team newTeam) {
-        if(teams.contains(newTeam)){
-            return teams;
+    private Team addTeam(Team newTeam) {
+        if(managerTeams.contains(newTeam)){
+            return newTeam;
         }
-        newTeam.addManager(this);
-        teams.add(newTeam);
-        return teams;
+//        newTeam.addManager(this);
+        managerTeams.add(newTeam);
+        return newTeam;
     }
 
 }

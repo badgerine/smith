@@ -1,39 +1,36 @@
 package com.xib.assessment.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.experimental.Tolerate;
 
 import javax.persistence.*;
 
+@Getter
 @SuperBuilder
 @Entity
-@Data
 public final class Agent extends Employee{
 
-    @ManyToOne(cascade = {CascadeType.MERGE})
-    @JoinColumn(name="team_id")
-    private Team team;
+    @NonNull
     @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name="manager_id")
     private Manager manager;
+    @NonNull
+    @ManyToOne(cascade = {CascadeType.MERGE})
+    @JoinColumn(name="team_id")
+    private Team team;
 
     public Agent() {
+        super();
     }
 
-    @Tolerate
     public Agent(String firstName, String lastName, String idNumber, Manager manager) {
         super(firstName, lastName, idNumber);
         setManager(manager);
     }
 
-    @Tolerate
     public Agent(String firstName, String lastName, String idNumber, Manager manager, Team team) {
-        super(firstName, lastName, idNumber);
-        setManager(manager);
+        this(firstName, lastName, idNumber, manager);
         setTeam(team);
     }
 
@@ -41,8 +38,10 @@ public final class Agent extends Employee{
         if(newTeam.equals(this.team)){
             return this.team;
         }
-        this.team.removeAgent(this);
-        newTeam.addAgent(this);
+        if(this.team != null){
+            this.team.removeAgent(this);
+        };
+//        newTeam.addAgent(this);
         this.team = newTeam;
         return this.team;
     }
@@ -51,7 +50,7 @@ public final class Agent extends Employee{
         if(newManager.equals(this.manager)){
             return this.manager;
         }
-        newManager.addAgent(this);
+//        newManager.addAgent(this);
         this.manager = newManager;
         return this.manager;
     }

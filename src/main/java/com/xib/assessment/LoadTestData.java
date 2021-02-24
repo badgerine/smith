@@ -1,17 +1,16 @@
-package com.xib.assessment.dao.data;
+package com.xib.assessment;
 
 import com.xib.assessment.dao.AgentRepository;
 import com.xib.assessment.dao.ManagerRepository;
 import com.xib.assessment.dao.TeamRepository;
 import com.xib.assessment.model.Agent;
-import com.xib.assessment.model.Employee;
 import com.xib.assessment.model.Manager;
 import com.xib.assessment.model.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,8 +24,8 @@ public class LoadTestData {
     @Autowired
     TeamRepository teamRepository;
 
-//    @PostConstruct
-//    @Transactional
+    @PostConstruct
+    @Transactional
     public void execute() {
         Team team1 = createTeam("Marvel");
         Team team2 = createTeam("DC");
@@ -47,21 +46,12 @@ public class LoadTestData {
     }
 
     private Agent createAgent(String firstName, String lastName, String idNumber, Team team, Manager manager) {
-        Agent a = Agent.builder()
-        .firstName(firstName)
-       . lastName(lastName)
-        .idNumber(idNumber)
-        .manager(manager)
-        .team(team).build();
+        Agent a = new Agent(firstName, lastName, idNumber, manager, team);
         return agentRepository.save(a);
     }
 
     private Manager createManager(String firstName, String lastName, String idNumber, Set<Team> teams) {
-        Manager m = Manager.builder()
-                .firstName(firstName)
-                . lastName(lastName)
-                .idNumber(idNumber)
-                .teams(teams).build();
+        Manager m = new Manager(firstName, lastName, idNumber, teams);
         return managerRepository.save(m);
     }
 
