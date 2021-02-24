@@ -51,7 +51,6 @@ public final class Agent extends Employee{
         if(newManager.equals(this.manager)){
             return this.manager;
         }
-        newManager.addAgent(this);
         this.manager = newManager;
         return this.manager;
     }

@@ -48,7 +48,7 @@ public class TeamController {
     @PostMapping(path=TEAM_PATH, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addTeam(@Validated @RequestBody TeamDto.ManagedEmptyTeam teamInfo){
         Team team = teamService.addNewTeam(teamInfo);
-        return new ResponseEntity<>(team, HttpStatus.OK);
+        return new ResponseEntity<>(team, HttpStatus.CREATED);
     }
 
     @PutMapping(TEAM_PATH+"/{id}/agent")

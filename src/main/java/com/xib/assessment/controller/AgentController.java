@@ -45,7 +45,7 @@ public class AgentController {
     @PostMapping(path=AGENT_PATH, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addAgent(@RequestBody AgentDto.NewAgent agentDetails){
         Agent agent = agentService.addNewAgent(agentDetails);
-        return new ResponseEntity<>(agent, HttpStatus.OK);
+        return new ResponseEntity<>(agent, HttpStatus.CREATED);
     }
 
 }

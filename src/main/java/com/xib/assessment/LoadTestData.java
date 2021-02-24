@@ -7,6 +7,7 @@ import com.xib.assessment.model.Agent;
 import com.xib.assessment.model.Manager;
 import com.xib.assessment.model.Team;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

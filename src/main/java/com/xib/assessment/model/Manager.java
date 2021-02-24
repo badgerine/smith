@@ -47,7 +47,6 @@ public class Manager extends Employee{
         if(managerTeams.contains(newTeam)){
             return newTeam;
         }
-//        newTeam.addManager(this);
         managerTeams.add(newTeam);
         return newTeam;
     }

@@ -41,8 +41,6 @@ public class RepositoriesTest {
     Manager nickFury;
     Team teamMarvel;
     Team teamDC;
-//    Team team3 = createTeam("Midway");
-//    Team team4 = createTeam("Namco");
 
     @BeforeEach
     void setup(){
