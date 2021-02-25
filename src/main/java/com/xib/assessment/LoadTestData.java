@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-@ApplicationScope
 public class LoadTestData {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoadTestData.class);
     @Autowired
@@ -32,6 +31,7 @@ public class LoadTestData {
     @PostConstruct
     @Transactional
     public void execute() {
+        Team team0 = createTeam("Konami");
         Team team1 = createTeam("Marvel");
         Team team2 = createTeam("DC");
         Manager nickFury = createManager("Nick", "Fury","6611115391083",

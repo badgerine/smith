@@ -1,4 +1,4 @@
-package com.xib.assessment.error;
+package com.xib.assessment.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

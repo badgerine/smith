@@ -1,4 +1,4 @@
-package com.xib.assessment.error;
+package com.xib.assessment.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;

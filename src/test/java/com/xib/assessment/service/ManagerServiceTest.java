@@ -1,14 +1,19 @@
 package com.xib.assessment.service;
 
+import com.xib.assessment.LoadTestData;
+import com.xib.assessment.config.TestContext;
 import com.xib.assessment.dao.ManagerRepository;
 import com.xib.assessment.dao.TeamRepository;
 import com.xib.assessment.dto.ManagerDto;
 import com.xib.assessment.model.Manager;
 import com.xib.assessment.model.Team;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -24,9 +29,11 @@ public class ManagerServiceTest {
     @Autowired
     ManagerService managerService;
     @MockBean
-    ManagerRepository managerRepository;
+    ManagerRepository managerRepositoryMock;
     @MockBean
-    TeamRepository teamRepository;
+    TeamRepository teamRepositoryMock;
+    @MockBean
+    LoadTestData loadTestData;
 
     //data stubs
     private Team teamAvengers;
@@ -44,16 +51,16 @@ public class ManagerServiceTest {
     void testAddNewManager(){
         //prepare stubbing
         setupNickFury();
-        when(managerRepository.findByIdNumber(any(String.class))).thenReturn(Optional.ofNullable(null));
-        when(teamRepository.findById(any(Long.class))).thenReturn(Optional.of(teamAvengers));
-        when(managerRepository.save(any(Manager.class))).thenReturn(managerFuryStub);
+        when(managerRepositoryMock.findByIdNumber(any(String.class))).thenReturn(Optional.ofNullable(null));
+        when(teamRepositoryMock.findById(any(Long.class))).thenReturn(Optional.of(teamAvengers));
+        when(managerRepositoryMock.save(any(Manager.class))).thenReturn(managerFuryStub);
         //run functionality
         Manager managerResult = managerService.addNewManager(managerDtoFuryStub);
         //check
         assertEquals(managerResult.getIdNumber(), managerFuryStub.getIdNumber(), "manager idNumbers different.");
         assertEquals(managerResult,managerFuryStub,"Manager equality is not valid.");
         //verify managerRepo.save was called
-        verify(managerRepository).save(any(Manager.class));
+        verify(managerRepositoryMock).save(any(Manager.class));
 
     }
 }
